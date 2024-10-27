@@ -1,4 +1,4 @@
-﻿using LinCsharp.Tranlator;
+﻿using LinCsharp.Translator;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Windows.Forms;

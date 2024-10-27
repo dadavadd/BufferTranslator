@@ -1,36 +1,39 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace LinCsharp.Utils.Extensions
 {
+    [JsonSerializable(typeof(JsonElement))]
+    public partial class TranslationContext : JsonSerializerContext
+    {
+    }
+
     public static class Extensions
     {
+        [RequiresUnreferencedCode("ToTranslatedText")]
+        [UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "<Pending>")]
         public static string ToTranslatedText(this string json)
         {
             StringBuilder translatedText = new StringBuilder();
+            var data = JsonSerializer.Deserialize<JsonElement>(json, new JsonSerializerOptions { TypeInfoResolver = TranslationContext.Default });
 
-            var data = JsonSerializer.Deserialize<dynamic>(json);
+            if (data.GetArrayLength() == 0)
+                return string.Empty;
 
-            int i = 0;
+            var translations = data[0];
 
-            try
+            for (int i = 0; i < translations.GetArrayLength(); i++)
             {
-                while (true)
-                {
-                    string text = data[0][i][0].ToString();
-
-                    if (text.Contains('\n'))
-                        translatedText.Append($"{text} \n");
-
+                string text = translations[i][0].ToString();
+                if (text.Contains('\n'))
+                    translatedText.Append($"{text} \n");
+                else
                     translatedText.Append($"{text}");
+            }
 
-                    i++;
-                }
-            }
-            catch (IndexOutOfRangeException)
-            {
-                return translatedText.ToString();
-            }
+            return translatedText.ToString();
         }
     }
 }

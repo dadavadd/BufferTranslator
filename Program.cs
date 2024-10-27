@@ -1,5 +1,4 @@
 ﻿using LinCsharp.Hooks;
-using LinCsharp.Tranlator;
 using System.Runtime.Versioning;
 using System.Windows.Forms;
 using WindowsInput;
@@ -10,8 +9,20 @@ namespace LinCsharp
     public class Program
     {
         private static InputSimulator _simulator = new InputSimulator();
+        private static string _languageFrom;
+        private static string _languageTo;
         static void Main()
         {
+            Console.Title = "Buffer Translator | https://t.me/larkliy";
+
+
+            Console.Write("Write the abbreviation of the language from which you want to translate: ");
+            _languageFrom = Console.ReadLine() ?? "ru";
+            Console.Write("Write the abbreviation of the language you want to translate into: ");
+            _languageTo = Console.ReadLine() ?? "en";
+
+            Console.Clear();
+
             Console.WriteLine("Clipboard watcher started. Press Ctrl+C to exit.");
 
             ClipboardNotification.ClipboardUpdate += async (sender, e) => await OnClipboardUpdate();
@@ -34,19 +45,20 @@ namespace LinCsharp
             {
                 string originalText = Clipboard.GetText();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Original text: {originalText}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Original text: {originalText}");
                 Console.ResetColor();
 
-                using var translator = new Translator();
-
+                using var translator = new Translator.Translator(_languageFrom, _languageTo);
                 var (translateText, translatedText) = await translator.Translate(originalText);
 
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"Translated text: {translatedText}");
-                Console.WriteLine("Translated text set to clipboard.");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Translated text: {translatedText}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Translated text succesfully pasted.");
+                Console.ResetColor();
 
                 SimulateTextEntry(translatedText);
 
+                Console.WriteLine(new string('-', 100));
             }
         }
 

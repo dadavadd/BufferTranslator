@@ -1,4 +1,4 @@
-﻿namespace LinCsharp.Tranlator
+﻿namespace LinCsharp.Translator
 {
     public class TranslationParameters
     {

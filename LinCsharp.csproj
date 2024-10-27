@@ -5,11 +5,90 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+
+
+	<PublishAot>true</PublishAot>
+	<JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
+
+	<PropertyGroup>
+		<InvariantGlobalization>true</InvariantGlobalization>
+		<UseSystemResourceKeys>true</UseSystemResourceKeys>
+		<IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+		<IlcTrimMetadata>true</IlcTrimMetadata>
+		<IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+		<StackTraceSupport>false</StackTraceSupport>
+		<IlcDisableReflection>false</IlcDisableReflection>
+
+		<OptimizationPreference>Size</OptimizationPreference>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<IlcGenerateWin32Resources>false</IlcGenerateWin32Resources>
+
+		<IlcGenerateMstatFile>true</IlcGenerateMstatFile>
+		<IlcGenerateDgmlFile>true</IlcGenerateDgmlFile>
+		<IlcGenerateMetadataLog>true</IlcGenerateMetadataLog>
+		<IlcDumpGeneratedIL>true</IlcDumpGeneratedIL>
+		<InvariantGlobalization>true</InvariantGlobalization>
+
+		<EnableUnsafeBinaryFormatterInDesigntimeLicenseContextSerialization>true</EnableUnsafeBinaryFormatterInDesigntimeLicenseContextSerialization>
+
+		<SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<ILLinkTreatWarningsAsErrors>false</ILLinkTreatWarningsAsErrors>
+		<TrimmerSingleWarn>false</TrimmerSingleWarn>
+		<TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
+		<AutoreleasePoolSupport>false</AutoreleasePoolSupport>
+		<DebuggerSupport>false</DebuggerSupport>
+		<EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+		<EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
+		<HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
+		<EventSourceSupport>false</EventSourceSupport>
+		<MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+		<UseNativeHttpHandler>true</UseNativeHttpHandler>
+		<UseSystemResourceKeys>true</UseSystemResourceKeys>
+
+		<StartupHookSupport>true</StartupHookSupport>
+		<EnableCppCLIHostActivation>false</EnableCppCLIHostActivation>
+
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
+	</PropertyGroup>
+	<ItemGroup>
+		<RuntimeHostConfigurationOption Include="System.Windows.Forms.PictureBox.UseWebRequest" Value="false" Trim="true" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <Content Include="logo.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="InputSimulator" Version="1.0.4" />
   </ItemGroup>
+
+	<Target Name="RemoveWPFReference" BeforeTargets="WriteIlcRspFileForCompilation">
+		<ItemGroup>
+			<IlcReference Remove="@(IlcReference)" Condition="'%(Filename)' == 'PresentationFramework'" />
+		</ItemGroup>
+	</Target>
+
+	<ItemGroup>
+		<LinkerArg Include="/opt:ref /opt:icf"></LinkerArg>
+		<LinkerArg Include="/opt:ref /opt:icf"></LinkerArg>
+		<LinkerArg Include="/safeseh:no"></LinkerArg>
+		<LinkerArg Include="/emittoolversioninfo:no"></LinkerArg>
+		<LinkerArg Include="/emitpogophaseinfo"></LinkerArg>
+		<LinkerArg Include="/fixed"></LinkerArg>
+		<LinkerArg Include="/safeseh:no"></LinkerArg>
+		<LinkerArg Include="/merge:.modules=.rdata"></LinkerArg>
+		<LinkerArg Include="/merge:.managedcode=.text"></LinkerArg>
+		<LinkerArg Include="/DEBUGTYPE:CV,PDATA,FIXUP" />
+	</ItemGroup>
 
   <ItemGroup>
     <Reference Include="System.Windows.Forms">

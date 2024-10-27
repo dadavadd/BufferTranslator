@@ -3,7 +3,7 @@
 using LinCsharp.Utils;
 using LinCsharp.Utils.Extensions;
 
-namespace LinCsharp.Tranlator
+namespace LinCsharp.Translator
 {
     public class Translator : IDisposable
     {
@@ -37,7 +37,7 @@ namespace LinCsharp.Tranlator
 
         public async Task<(string translateText, string translatedText)> Translate(string text)
         {
-            string response = await _client.GetStringAsync($"single?client=gtx&sl={translated}&tl={translatedTo}&dt=t&q={text}");
+            string response = await _client.GetStringAsync($"single?client=gtx&sl={translated}&tl={translatedTo}&dt=t&q={Uri.EscapeDataString(text)}");
             string translatedText = response.ToTranslatedText();
 
             return (text, translatedText);
